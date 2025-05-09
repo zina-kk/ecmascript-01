@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAIN영역으로 ECMASCRIPT 연습하기</title>
+    <script>
+        document.addEventListener("DOMContentLoaded" , ()=>{
+            //1)#notice 내부의 모든 <a>텍스트 콘텐츠를 map()을 사용하여 (새로운 배열로) 콘솔창에 출력한다.
+            //forEach() 원본변경가능
+            //map()원본변경 불가능, 새로운 배열이 생김
+            const notice_a = [...document.querySelectorAll('#notice a')];
+            notice_a.map(i =>{
+                console.log(i.textContent);
+            });
+
+            //2) #notice의 <span>텍스트 콘텐츠 "2024년 03월 01일" 형태로 map()을 사용하여 콘솔에 표기하기
+            const notice_span =[...document.querySelectorAll('#notice span')];
+            const ss = notice_span.map(i =>{
+                const [y, m, d] = i.textContent.split('.');
+                return`${y}년${m}월${d}일`;
+            });
+            console.log(ss);
+            //콘텐츠 변경하기
+            notice_span.forEach(i =>{
+                const [y, m, d] = i.textContent.split('.');
+                i.textContent = `${y}년${m}월${d}일`;
+            });
+
+            //3)map()을 사용하여, #gallery의 <img>src를 모두 콘솔에 표시한다.
+            const gallery_img = [...document.querySelectorAll('#gallery img')];
+            const img_src = gallery_img.map( i => i.src );
+            console.log(img_src);
+
+            //4)<main>에 있는 모든 <section>의 id 이름을 콘솔에 표시한다.
+            const main_section = [...document.querySelectorAll('main section')];
+            const section_id = main_section.map( i => i.id );
+            console.log(section_id);
+
+            //5)#notice의 <h2> 텍스트 콘텐츠를 "LINECOM'S NOTICE"로 변경한다.
+            const $notice_h2 = document.querySelector("#notice h2");
+            $notice_h2.textContent="LINECOM'S NOTICE";
+
+            //6) #notice에 <li>에 번호를 붙여서 "1.. , 2.. " 콘솔에 표시한다.
+            const notice_li = [...document.querySelectorAll('#notice li')];
+            notice_li.forEach((i , j)=>{
+                const text =`${j+1}.${i.textContent} `;
+                console.log(text);
+            });
+        
+            //홈페이지에 abcd로 알파벳블릿으로 변경한다.
+            const $notice_ol = document.querySelector('#notice ol');
+            $notice_ol.style.listStyleType="upper-alpha";
+
+            //7)#notice의 모든<li>에 "zzz"라는 클래스를 추가한다.
+            notice_li.forEach( i => i.classList.add('zzz'));
+
+            //8)#gallery에서 <img>의 alt속성 값 "갤러리"를 "갤러리 이미지 1" ~ "갤러리 이미지3"으로 이름 변경한다.
+            const $gallery_img = [...document.querySelectorAll("#gallery img")];
+            $gallery_img.forEach(( i, j )=>{
+                i.alt = `갤러리 이미지 ${j + 1}`;
+            });
+            
+            //9)#notice 콘솔창에 <a>텍스트만 콘솔에 표시한다.
+            notice_a.map( i => console.log(i.textContent));
+
+            //10)#notice의 <li>와 #gallery <img> 항목 수를 객체 {notice:4, gallery:3} 콘솔에 표시하기
+            const x = {notice : notice_li.length, gallery :$gallery_img.length}
+            console.log(x);
+
+            //11)#notice의 <li>를 클릭하면 경고창에 <a>텍스트가 표시된다.
+                notice_li.map( i =>{
+                    i.addEventListener('click' , ()=>{
+                        console.log(i.querySelector('a').textContent);
+                    });
+                });
+
+            //12) #gallery의 <a>에 마우스를 대면 경고창에 해당 이미지 src값이 표시된다.
+            const $gallery_a = [...document.querySelectorAll("#gallery a")];
+            $gallery_a.map( i =>{
+                i.addEventListener('mouseenter' , ()=>{
+                    console.log(i.querySelector('img').src);
+                });
+            });   
+            
+            //13)바로가기 <a> 클릭 시, <h2>텍스트 + "클릭됨" 하여 "바로가기 클릭됨" 이라는 문구 표시하기
+            const $quick = document.getElementById('quick');
+            const quick_h2 = $quick.getElementsByTagName('h2')[0];
+            const quick_a = $quick.getElementsByTagName('a')[0];
+            quick_a.addEventListener('click',()=>{
+                const x= quick_h2.textContent + '클릭됨';
+                console.log(x);
+            });
+
+            //14)공지사항에서 <a>를 클릭하면 class='active'이 토글된다.
+            notice_a.forEach( i =>{
+                //notice_a.forEach(j=>j.classList.remove('active'));
+                i.addEventListener('click', ()=>{
+                    notice_a.forEach(j=>j.removeAttribute('class'));
+                    i.classList.add('active');
+                });
+            });
+
+            //15)#gallery에서 <a> 클릭 시, 이미지가 원형이 된다.
+            $gallery_a.forEach(i =>{
+                i.addEventListener('click' , ()=>{
+                    $gallery_a.forEach( j =>j.querySelector('img').style.borderRadius=0);
+                    i.querySelector('img').style.borderRadius = '50%';
+                });
+            });
+
+            //16) 공지사항 <li>를 클릭하면 배경색이 노랗게, 다른 <li>는 배경색 제거된다.
+            notice_li.map( i =>{
+                i.addEventListener('click' , ()=>{
+                    notice_li.map(j=>j.style.background='none');
+                    i.style.background= 'yellow';
+                });
+            });
+
+            //17) 구조 분해 할당을 사용하여, 공지사항의 <a>와 <span>을 변수로 분리하여 콘솔에 표시한다.
+            notice_li.forEach( i=>{
+                //const {속성명 : 변수명}
+                const {textContent : text} =notice_17.querySelector('a');
+                const {textContents : date} = notice_17.querySelector('span');
+                console.log(text , date);
+            });
+            //17-1) 구조 분해 할당으로, #gallery 내 모든 이미지의 src를 콘솔에 표기하기
+            gallery_img.map( i =>{
+                const{src : src_17} =i; 
+                console.log(src_17);
+            });
+
+            //17-2) 구조 분해 할당으로, #quick에서 <a> href를 콘솔에 표시하기
+            //quick_a
+            const {href : href_17} = quick_a;
+            console.log(href_17);
+            
+
+        });
+    </script>
+</head>
+<body>
+    <main>                
+        <section id="notice">
+            <h2>공지사항</h2>
+            <ol>
+                <li>
+                    <a href="#">리뷰 적립금 기준 변경 안내</a><span>2024.03.01</span>
+                </li>
+                <li>
+                    <a href="#">개인정보 처리방침 개정 안내</a><span>2024.03.01</span>
+                </li>
+                <li>
+                    <a href="#">신규 회원 혜택 변경 안내</a><span>2024.03.01</span>
+                </li>
+                <li>
+                    <a href="#">배송 업무 휴무 안내</a><span>2024.03.01</span>
+                </li>
+            </ol>
+        </section>
+        <section id="gallery">
+            <h2>갤러리</h2>
+            <div>
+                <a href="#"><img src="images/gallery-1.jpg" alt="갤러리"></a>
+                <a href="#"><img src="images/gallery-2.jpg" alt="갤러리"></a>
+                <a href="#"><img src="images/gallery-3.jpg" alt="갤러리"></a>
+            </div>
+        </section>
+        <section id="quick">
+            <h2>바로가기</h2>
+            <a href="#"><img src="images/shortcut.jpg" alt="바로가기"></a>
+        </section>
+</main>
+</body>
+</html>
